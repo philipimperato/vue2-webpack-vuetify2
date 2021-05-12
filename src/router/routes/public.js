@@ -1,6 +1,3 @@
-import Registration from '@/views/user/Register.vue'
-import ForgotPassword from '@/views/user/ForgotPassword.vue'
-
 const routes = [
   {
     path: '/login',
@@ -13,19 +10,19 @@ const routes = [
   {
     path: '/register',
     name: 'register',
-    component: Registration
+    component: () => import('@/views/user/Register.vue')
   },
   {
     path: '/forgot-password',
     name: 'forgotPassword',
-    component: ForgotPassword
+    component: () => import('@/views/user/ForgotPassword.vue')
   }
 ]
 
 export default routes.map(route => {
-  const meta = {
+  const meta = Object.assign(route.meta || {}, {
     public: true,
     auth: false
-  }
+  })
   return { ...route, meta }
 })

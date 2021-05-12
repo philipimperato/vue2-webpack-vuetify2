@@ -13,5 +13,4 @@ export default {
 </script>
 
 <style>
-  @import './assets/vuetify-overrides.css';
 </style>

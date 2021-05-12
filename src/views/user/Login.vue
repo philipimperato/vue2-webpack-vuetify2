@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-container.fill-height(fluid='')
+  v-container.fill-height( fluid='' )
     v-row(
       align='center'
       justify='center'
@@ -16,8 +16,15 @@
             | Sign in to your account
           p.mt-2.text-center.text-sm.text-gray-600
             | Or &nbsp;
-            a.font-medium.text-indigo-600(href='#', class='hover:text-indigo-500')
-              | register for an account
+            a.font-medium.text-indigo-600(
+              @click="isRegisterDialogOpen = true"
+              class='hover:text-indigo-500'
+            ) register for an account
+        Register(
+          title="Register an account"
+          :isOpen="isRegisterDialogOpen"
+          @close="isRegisterDialogOpen = false"
+        )
         v-card( elevation="2" )
           v-card-text
             v-form.pa-4(
@@ -59,24 +66,36 @@
 
               .mt-4.text-left
                 router-link( to="forgot-password" ) Forgot password?
+
 </template>
 
 <script>
+import { ref } from '@vue/composition-api'
 import validations from '@/mixins/validations'
+import Register from '@/views/user/Register'
 
 export default {
   name: '',
+  components: {
+    Register
+  },
   data: () => ({
     valid: true,
     loginError: false,
     sendingLogin: false
   }),
   mixins: [validations],
-  methods: {
-    userLogin () {}
+  setup () {
+    const isRegisterDialogOpen = ref(false)
+    const userLogin = ref({
+      email: '',
+      password: ''
+    })
+
+    return {
+      userLogin,
+      isRegisterDialogOpen
+    }
   }
 }
 </script>
-
-<style>
-</style>
