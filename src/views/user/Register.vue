@@ -1,15 +1,15 @@
 <template lang="pug">
   CommonCreateEditDialog(
     :isOpen="isOpen"
-    @close="$emit('close')"
+    @close="$refs.registerForm.reset(); $emit('close')"
     :title="title"
     :valid="valid"
     action="Register"
   )
     FeathersVuexFormWrapper( :item="newUser" )
-      template( v-slot="{ clone, save }" )
+      template( v-slot="{ clone, save, reset }" )
         v-form.pa-4.space-y-2(
-          ref="form"
+          ref="registerForm"
           v-model="valid"
           v-on:submit.prevent="login(save)"
         )
