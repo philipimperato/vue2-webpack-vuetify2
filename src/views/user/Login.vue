@@ -31,13 +31,13 @@
               lazy-validation
               ref="form"
               v-model="valid"
-              v-on:submit.prevent="login"
+              v-on:submit.prevent="login(save)"
             )
-              v-sheet.pa-4.mb-6(
-                v-if="loginError"
-                color="error lighten-2"
-              )
-                h3.text-center {{ loginError }}
+              //- v-sheet.pa-4.mb-6(
+              //-   v-if="loginError"
+              //-   color="error lighten-2"
+              //- )
+              //-   h3.text-center {{ loginError }}
               v-text-field(
                 label='Email Address'
                 name='email'
@@ -46,7 +46,7 @@
                 type='text'
                 :rules="[rules.required, rules.email]"
               )
-              v-text-field#password(
+              v-text-field(
                 label='Password'
                 outlined
                 v-model="userLogin.password"
@@ -65,7 +65,12 @@
               ) Login
 
               .mt-4.text-left
-                router-link( to="forgot-password" ) Forgot password?
+                a( @click="isForgotPasswordDialogOpen = true" ) Forgot password?
+              ForgotPassword(
+                title="Reset your password"
+                :isOpen="isForgotPasswordDialogOpen"
+                @close="isForgotPasswordDialogOpen = false"
+              )
 
 </template>
 
@@ -73,20 +78,20 @@
 import { ref } from '@vue/composition-api'
 import validations from '@/mixins/validations'
 import Register from '@/views/user/Register'
+import ForgotPassword from '@/views/user/ForgotPassword'
 
 export default {
   name: '',
   components: {
-    Register
+    Register,
+    ForgotPassword
   },
-  data: () => ({
-    valid: true,
-    loginError: false,
-    sendingLogin: false
-  }),
   mixins: [validations],
   setup () {
     const isRegisterDialogOpen = ref(false)
+    const isForgotPasswordDialogOpen = ref(false)
+    const valid = ref(false)
+    const sendingLogin = ref(false)
     const userLogin = ref({
       email: '',
       password: ''
@@ -94,7 +99,11 @@ export default {
 
     return {
       userLogin,
-      isRegisterDialogOpen
+      sendingLogin,
+      valid,
+
+      isRegisterDialogOpen,
+      isForgotPasswordDialogOpen
     }
   }
 }

@@ -17,11 +17,12 @@ export default {
           return (!!value || pattern.test(value)) || 'Must be a Number'
         },
         isMatch: v => (!!v && v) === this.match || 'Values do not match',
-        isEightCharacters: v => v.length >= 8 || 'Must be at least 8 characters',
+        isFourCharacters: v => v.length >= 4 || 'Must be at least 4 characters',
         includesNumber: value => {
           const pattern = /\d/
           return (!value || pattern.test(value)) || 'Must include a number'
         },
+        confirmPassword: c => c.password === c.confirmPassword || 'Passwords do not match',
         includesSymbol: value => {
           const pattern = /[$@#%&+=*-/:-?{-~!"^_`[\]]/
           return (!value || pattern.test(value)) || 'Must include a symbol'

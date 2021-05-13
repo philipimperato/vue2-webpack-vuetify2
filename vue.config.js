@@ -6,8 +6,8 @@ module.exports = {
   chainWebpack: config => {
     config.plugin('VuetifyLoaderPlugin').tap(args => [{
       match (originalTag, { kebabTag, camelTag, path, component }) {
-        if (kebabTag.startsWith('core-')) {
-          return [camelTag, `import ${camelTag} from '@/components/core/${camelTag.substring(4)}.vue'`]
+        if (camelTag.includes('Common')) {
+          return [camelTag, `import ${camelTag} from '@/components/common/${camelTag.substring(6)}.vue'`]
         }
       }
     }])

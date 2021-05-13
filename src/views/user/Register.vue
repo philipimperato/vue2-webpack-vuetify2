@@ -1,41 +1,55 @@
 <template lang="pug">
-  v-dialog(
-    v-model="isOpen"
-    :max-width="500"
-    persistent
+  CommonCreateEditDialog(
+    :isOpen="isOpen"
+    @close="$emit('close')"
+    :title="title"
+    :valid="valid"
+    action="Register"
   )
-    v-toolbar(
-      color="primary"
-      dark
-      flat
-    )
-      v-toolbar-title {{ title }}
-      v-spacer
-      v-btn(
-        icon
-        @click="$emit('close')"
-      )
-        v-icon mdi-close
-    div.pa-4.bg-white
-      
-    v-toolbar
-      v-spacer
-      v-btn.mr-4(
-        large
-        @click="$emit('close')"
-        color="white"
-        depressed
-      ) Cancel
-      v-btn(
-        large
-        color="primary"
-        depressed
-      ) Save
+    FeathersVuexFormWrapper( :item="newUser" )
+      template( v-slot="{ clone, save }" )
+        v-form.pa-4.space-y-2(
+          ref="form"
+          v-model="valid"
+          v-on:submit.prevent="login(save)"
+        )
+          v-text-field(
+            label='Email Address'
+            name='email'
+            v-model="clone.email"
+            outlined
+            dense
+            autofocus
+            type='text'
+            :rules="[rules.required, rules.email]"
+          )
+          v-text-field(
+            label='Password'
+            outlined
+            dense
+            v-model="clone.password"
+            name='password'
+            type='password'
+            :rules="[rules.required, rules.isFourCharacters, rules.confirmPassword(clone)]"
+          )
+          v-text-field(
+            label='Confirm Password'
+            outlined
+            dense
+            v-model="clone.confirmPassword"
+            name='confirm-password'
+            type='password'
+            :rules="[rules.required, rules.isFourCharacters, rules.confirmPassword(clone)]"
+          )
 </template>
 
 <script>
+import { ref } from '@vue/composition-api'
+import validations from '@/mixins/validations'
+
 export default {
   name: 'Register',
+  mixins: [validations],
   props: {
     isOpen: {
       type: Boolean,
@@ -46,6 +60,17 @@ export default {
       type: String,
       default: null,
       required: false
+    }
+  },
+
+  setup (props, { root }) {
+    const { User } = root.$FeathersVuex.api
+    const newUser = new User({ confirmPassword: '' })
+    const valid = ref(false)
+
+    return {
+      valid,
+      newUser
     }
   }
 }
